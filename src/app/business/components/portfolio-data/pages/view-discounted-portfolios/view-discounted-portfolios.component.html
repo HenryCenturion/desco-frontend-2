@@ -55,7 +55,8 @@
             <dl class="-my-3 divide-y divide-gray-100 dark:divide-gray-700 text-sm" [ngClass]="{'hidden': collapsedStates[portfolio.portfolioId]}">
               <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
                 <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.discount_date' | translate }}</dt>
-                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.discountDate | date:'dd-MM-yyyy, HH:mm:ss' }}</dd>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.discountDate | date:'dd-MM-yyyy, HH:mm:ss' : '-1000' }}
+                </dd>
               </div>
               <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
                 <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.number_of_documents' | translate }}</dt>

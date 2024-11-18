@@ -1,0 +1,152 @@
+<section class="pb-24 relative pt-10 dark:bg-gray-900">
+  <div class="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto">
+    <h1 class="text-center text-balance text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
+      {{ 'portfolio_summary.title' | translate }}
+    </h1>
+    <p class="mt-4 font-normal text-lg leading-8 text-gray-500 dark:text-gray-400 mb-11 text-center">
+      {{ 'portfolio_summary.description' | translate }}
+    </p>
+
+    <div class="mb-6 flex flex-col sm:flex-row items-center">
+      <i class="fa-solid fa-bank text-black dark:text-white mr-2.5"></i>
+      <label for="bankSelect" class="block text-lg font-medium text-gray-700 dark:text-gray-300 mr-4">{{ 'portfolio_summary.select_bank' | translate }}</label>
+      <div class="relative w-full sm:w-auto">
+        <select id="bankSelect" [(ngModel)]="selectedBankId" (change)="updateDocumentValues()" class="mt-1 block w-full sm:w-48 pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md appearance-none bg-white dark:bg-gray-800 dark:text-gray-200">
+          <option *ngFor="let bank of banks" [value]="bank.id">{{ bank.name }}</option>
+        </select>
+      </div>
+      <div *ngIf="selectedBankId" class="sm:ml-4 p-2 w-full sm:w-auto">
+        <p class="text-base font-normal text-green-700 dark:text-green-400">
+          {{ 'portfolio_summary.interest_rate' | translate }} {{ getInterestRateType(selectedBankId) }} {{ getInterestRateTime(selectedBankId) }} de {{ getInterestRate(selectedBankId) }}%<span *ngIf="getInterestRateType(selectedBankId) !== 'efectiva'"> {{ 'portfolio_summary.capitalization' | translate }} {{ getCapitalizationFrequency(selectedBankId) }}</span>
+        </p>
+      </div>
+      <div *ngIf="showError && !selectedBankId" class="sm:ml-4 p-2 w-full sm:w-auto">
+        <p class="text-base font-normal text-red-700 dark:text-red-400">
+          {{ 'portfolio_summary.select_bank_error' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <div class="main-box border border-gray-200 dark:border-gray-600 rounded-xl pt-6 max-w-xl max-lg:mx-auto lg:max-w-full relative dark:bg-gray-800">
+      <div class="flex flex-col sm:flex-row justify-between items-center pr-6 pb-6 gap-4">
+        <button (click)="toggleCollapse()" class="flex items-center gap-2 p-2 ml-5 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-full font-normal text-base sm:text-lg">
+          <span class="pl-2">{{ isCollapsed ? ('portfolio_summary.view_more' | translate) : ('portfolio_summary.view_less' | translate) }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isCollapsed ? 'M19 9l-7 7-7-7' : 'M5 15l7-7 7 7'" />
+          </svg>
+        </button>
+        <button (click)="cancelDiscount()" class="flex outline-0 py-2 px-4 sm:pr-6 sm:border-r border-gray-200 dark:border-gray-600 whitespace-nowrap gap-2 items-center justify-center font-normal group text-base sm:text-lg text-white bg-red-600 rounded-full transition-all hover:bg-red-700 dark:hover:bg-red-700">
+          <svg class="stroke-white transition-all group-hover:stroke-gray-200" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M5.5 5.5L16.5 16.5M16.5 5.5L5.5 16.5" stroke="" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+          {{ 'portfolio_summary.cancel_discount' | translate }}
+        </button>
+      </div>
+
+      <div class="max-h-80 overflow-y-auto">
+        <div [ngClass]="{'collapsible-content': true, 'expanded': !isCollapsed}" class="transition-all ease-in-out">
+          <div *ngFor="let document of documents" class="w-full px-3 min-[400px]:px-6">
+            <div class="flex flex-col lg:flex-row items-center py-6 border-b border-gray-200 dark:border-gray-600 gap-6 w-full hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 ease-in-out">
+              <div class="img-box max-lg:w-full">
+                <img [src]="document.type === 'factura' ? 'assets/factura.png' : 'assets/letra.png'" alt="Document Image" class="aspect-square w-full lg:max-w-[140px] rounded-xl object-cover">
+              </div>
+
+              <div class="flex flex-row items-center w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
+                  <div class="flex items-center">
+                    <div>
+                      <h2 class="font-semibold text-xl leading-8 text-gray-900 dark:text-gray-100 mb-3">
+                        {{ document.concept }}
+                      </h2>
+                      <div class="flex items-center space-x-2">
+                        <p class="text-lg leading-7 text-gray-700 dark:text-gray-300 pr-4 border-r border-gray-300 dark:border-gray-500">
+                          {{ 'portfolio_summary.days_to_due' | translate }}
+                          <span class="text-teal-600 dark:text-teal-400">{{ document.daysToDue }}</span>
+                        </p>
+                        <p class="text-lg leading-7 text-gray-700 dark:text-gray-300">
+                          {{ 'portfolio_summary.discount_rate' | translate }}
+                          <span class="text-teal-600 dark:text-teal-400">{{ (document.discountRatesByBank[selectedBankId!] * 100) | number:'1.2-2' }}%</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-5 gap-4 lg:justify-end">
+                    <div class="col-span-5 lg:col-span-1 flex items-center max-lg:mt-3">
+                      <div class="flex gap-3 lg:block">
+                        <p class="text-sm leading-7 text-gray-700 dark:text-gray-300">{{ 'portfolio_summary.nominal_value' | translate }}</p>
+                        <p class="text-lg leading-7 lg:mt-3 text-gray-800 dark:text-gray-200 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-full">
+                          {{ currency === 'USD' ? '$' : 'S/' }}{{ document.amount | number:'1.2-2' }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="col-span-5 lg:col-span-2 flex items-center justify-start lg:justify-end max-lg:mt-3">
+                      <div class="flex gap-3 lg:block">
+                        <p class="text-sm leading-7 text-gray-700 dark:text-gray-300">{{ 'portfolio_summary.discounted_value' | translate }}</p>
+                        <p class="text-lg leading-7 lg:mt-3 text-gray-800 dark:text-gray-200 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-full">
+                          {{ currency === 'USD' ? '$' : 'S/' }} {{ document.amount * document.discountRatesByBank[selectedBankId!] | number:'1.2-2' }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="col-span-5 lg:col-span-2 flex items-center justify-end max-lg:mt-3">
+                      <div class="flex gap-3 lg:block">
+                        <p class="text-sm leading-7 text-gray-700 dark:text-gray-300">{{ 'portfolio_summary.net_value' | translate }}</p>
+                        <p class="text-lg leading-8 py-1 px-4 whitespace-nowrap rounded-full lg:mt-3 text-indigo-700 dark:text-white bg-indigo-50 dark:bg-indigo-500">
+                          {{ currency === 'USD' ? '$' : 'S/' }} {{ document.amount * (1 - document.discountRatesByBank[selectedBankId!]) | number:'1.2-2' }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full border-t border-gray-200 dark:border-gray-600 px-6 flex flex-col lg:flex-row items-start justify-between py-6">
+        <div class="flex flex-col items-start">
+          <p class="font-normal text-xl text-gray-900 dark:text-gray-100">
+            {{ 'portfolio_summary.total_documents' | translate }}
+            <span class="text-indigo-700 dark:text-indigo-400 font-normal">{{ documents["length"] }}</span>
+          </p>
+          <p class="font-normal text-lg text-gray-900 dark:text-gray-200">
+            <span *ngIf="documents['length'] > 0" class="text-indigo-600 dark:text-indigo-400">
+              ({{ documentCounts['factura'] || 0 }} facturas y {{ documentCounts['letra'] || 0 }} letras)
+            </span>
+          </p>
+        </div>
+
+        <div class="flex flex-col items-start lg:items-end space-y-2">
+          <p class="font-normal text-xl text-gray-900 dark:text-gray-100">
+            {{ 'portfolio_summary.total_nominal_value' | translate }}
+            <span class="text-gray-600 dark:text-gray-400 font-normal">
+              {{ currency === 'USD' ? '$' : 'S/' }} {{ getTotalNominalValue() | number:'1.2-2' }}
+            </span>
+          </p>
+          <p class="font-normal text-xl text-gray-900 dark:text-gray-100">
+            {{ 'portfolio_summary.total_discount_value' | translate }}
+            <span class="text-red-600 dark:text-red-400 font-normal">
+              {{ currency === 'USD' ? '$' : 'S/' }} {{ getTotalDiscountValue() | number:'1.2-2' }}
+            </span>
+          </p>
+          <p class="font-normal text-xl text-gray-900 dark:text-gray-100">
+            {{ 'portfolio_summary.total_net_value' | translate }}
+            <span class="text-indigo-700 dark:text-indigo-400 font-normal">
+              {{ currency === 'USD' ? '$' : 'S/' }} {{ getTotalNetValue() | number:'1.2-2' }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center mt-6">
+    <button (click)="confirmDiscount()" class="flex items-center justify-center gap-2 p-2 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-full font-normal text-base sm:text-lg sm:w-auto">
+      <i class="fas fa-check-circle"></i>
+      {{ 'portfolio_summary.confirm_discount' | translate }}
+    </button>
+  </div>
+</section>

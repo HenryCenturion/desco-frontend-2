@@ -1,0 +1,16 @@
+@media (max-width: 1024px) {
+    .hide-on-small-screens {
+      display: none;
+    }
+    .center-video {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  
+  .center-link {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  

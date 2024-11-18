@@ -1,0 +1,87 @@
+<div *ngIf="isUserLoggedIn()">
+  <nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <!-- Mobile menu button-->
+          <button type="button" (click)="toggleMobileMenu()" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Open main menu</span>
+            <svg *ngIf="!isMobileMenuOpen" class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            <svg *ngIf="isMobileMenuOpen" class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div class="flex flex-shrink-0 items-center sm:hidden">
+            <em class="text-white font-bold mr-2">DESCO</em>
+            <img class="h-8 w-auto ml-2" src="../../../../assets/logo_desco.png" alt="Desco Logo" height="513" width="550">
+          </div>
+        </div>
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex flex-shrink-0 items-center hidden sm:flex">
+            <em class="text-white font-bold mr-2">DESCO</em>
+            <img class="h-8 w-auto" src="../../../../assets/logo_desco.png" alt="Desco Logo" height="513" width="550">
+          </div>
+          <div class="hidden sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+              <a routerLink="home" routerLinkActive="active-link" class="default-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer" aria-current="page">{{ 'header.home' | translate }}</a>
+              <a routerLink="portfolio" routerLinkActive="active-link" class="default-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer">{{ 'header.portfolio' | translate }}</a>
+              <a routerLink="banks" routerLinkActive="active-link" class="default-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer">{{ 'header.banks' | translate }}</a>
+              <a routerLink="help" routerLinkActive="active-link" class="default-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer">{{ 'header.help' | translate }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <!-- Profile dropdown -->
+          <div class="relative ml-3">
+            <div>
+              <button type="button" (click)="toggleUserMenu()" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                <span class="absolute -inset-1.5"></span>
+                <span class="sr-only">Open user menu</span>
+                <img class="h-8 w-8 rounded-full" src="../../../../assets/userIcon.png" alt="User Photo" height="512" width="512">
+              </button>
+            </div>
+
+            <div *ngIf="isUserMenuOpen" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+              <a (click)="toggleDarkMode()"
+                 class="flex items-center px-4 py-2 text-sm cursor-pointer text-gray-700 hover:bg-gray-100 hover:rounded-lg transition-colors duration-150" role="menuitem">
+                <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+                <span class="ml-3">{{ isDarkMode ? ('header.light_mode' | translate) : ('header.dark_mode' | translate) }}</span>
+              </a>
+              <div class="border-t border-gray-200 my-1"></div>
+              <a (click)="changeLanguage()"
+                 class="flex items-center px-4 py-2 text-sm cursor-pointer text-gray-700 hover:bg-gray-100 hover:rounded-lg transition-colors duration-150" role="menuitem">
+                <i class="fa-solid fa-language"></i>
+                <span class="ml-3">{{ language === 'en' ? 'Cambiar a Español' : 'Switch to English' }}</span>
+              </a>
+              <div class="border-t border-gray-200 my-1"></div>
+              <a (click)="logout()"
+                 class="flex items-center px-4 py-2 text-sm cursor-pointer text-gray-700 hover:bg-red-100 hover:text-red-700 hover:rounded-lg transition-colors duration-150" role="menuitem" tabindex="-1" id="user-menu-item-3">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span class="ml-3">{{ 'header.logout' | translate }}</span>
+              </a>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <div class="sm:hidden" id="mobile-menu" [ngClass]="{'block': isMobileMenuOpen, 'hidden': !isMobileMenuOpen}">
+      <div class="space-y-1 px-2 pb-3 pt-2">
+        <a (click)="navigateTo('home')" class="default-link block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white cursor-pointer active-link" aria-current="page">{{ 'header.home' | translate }}</a>
+        <a (click)="navigateTo('portfolio')" class="default-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer active-link">{{ 'header.portfolio' | translate }}</a>
+        <a (click)="navigateTo('banks')" class="default-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer active-link">{{ 'header.banks' | translate }}</a>
+        <a (click)="navigateTo('help')" class="default-link block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer active-link">{{ 'header.help' | translate }}</a>
+      </div>
+    </div>
+    <div *ngIf="isLogoVisible" class="fixed bottom-0 right-0 p-4">
+      <img class="h-8 w-auto" src="../../../../assets/logo_desco.png" alt="Desco Logo" height="513" width="550">
+    </div>
+  </nav>
+</div>

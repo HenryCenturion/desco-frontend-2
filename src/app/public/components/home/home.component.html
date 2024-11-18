@@ -1,0 +1,39 @@
+<section
+  class="relative  h-[100vh] bg-[url(https://ml5enisp4q1t.i.optimole.com/cb:avo9~b5e4/w:auto/h:auto/q:mauto/ig:avif/f:best/https://interiorarchitects.com/wp-content/uploads/2021/01/Bank-of-America-Chicago_07.jpg)] bg-cover bg-center bg-no-repeat"
+>
+  <div
+    class="absolute inset-0 bg-white/50 sm:bg-gradient-to-r sm:from-white/50 sm:to-white/10 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"
+  ></div>
+
+  <div
+    class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8"
+  >
+    <div class="max-w-xl text-left">
+      <h1 class="text-3xl font-extrabold text-gray-900 sm:text-5xl">
+        {{ 'home.title' | translate }}
+
+        <strong class="block font-extrabold text-gray-700">{{ 'home.subtitle' | translate }}</strong>
+      </h1>
+
+      <p class="mt-4 max-w-lg text-gray-800 sm:text-xl">
+        {{ 'home.description' | translate }}
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-4 text-center sm:text-left">
+        <a
+          routerLink="/portfolio"
+          class="block w-full rounded bg-gray-800 px-12 py-3 text-sm font-medium text-white shadow hover:bg-gray-700 focus:outline-none focus:ring active:bg-gray-600 sm:w-auto"
+        >
+          {{ 'home.cta_discount' | translate }}
+        </a>
+
+        <a
+          routerLink="/banks"
+          class="block w-full rounded bg-white px-12 py-3 text-sm font-medium text-gray-800 shadow hover:text-gray-900 focus:outline-none focus:ring active:text-gray-600 sm:w-auto"
+        >
+          {{ 'home.cta_banks' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,162 @@
+<section class="py-24 relative dark:bg-gray-900">
+  <div class="w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto flex flex-col items-center">
+
+    <!-- Título y subtítulo centrados -->
+    <div class="text-center mb-12">
+      <h2 class="font-manrope font-bold text-4xl leading-10 text-black dark:text-white">
+        {{ 'discounted_portfolios.title' | translate }}
+      </h2>
+      <p class="mt-4 font-normal text-lg leading-8 text-gray-500 dark:text-gray-400">
+        {{ 'discounted_portfolios.description' | translate }}
+      </p>
+    </div>
+
+    <!-- Contenedor principal con carteras -->
+    <div class="flex flex-col lg:flex-row gap-6 w-full" [ngClass]="{'justify-center': !selectedPortfolio}">
+
+      <!-- Lista de carteras -->
+      <div class="w-full lg:w-2/3">
+        <div *ngFor="let portfolio of portfolios" class="main-box rounded-xl mb-6 bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-shadow duration-300">
+          <!-- Contenedor del título y botones -->
+          <div class="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-blue-500 to-teal-500 rounded-t-xl text-white dark:bg-gradient-to-r dark:from-indigo-600 dark:to-teal-600">
+            <div class="text-lg font-semibold">
+              {{ portfolio.portfolioName }}
+            </div>
+            <div class="flex gap-3">
+              <button
+                (click)="toggleCollapse(portfolio.portfolioId)"
+                class="flex items-center gap-2 p-2 bg-blue-600 text-white rounded-full font-medium text-sm sm:text-base hover:bg-blue-700 transition-colors dark:bg-indigo-600 dark:hover:bg-indigo-700"
+              >
+                <i class="fas" [class.fa-chevron-down]="collapsedStates[portfolio.portfolioId]" [class.fa-chevron-up]="!collapsedStates[portfolio.portfolioId]"></i>
+                <span *ngIf="screenWidth >= 1024">{{ collapsedStates[portfolio.portfolioId] ? ('discounted_portfolios.view_more' | translate) : ('discounted_portfolios.view_less' | translate) }}</span>
+              </button>
+
+              <button
+                (click)="selectPortfolio(portfolio)"
+                class="flex items-center gap-2 p-2 bg-green-500 text-white rounded-full font-medium text-sm sm:text-base hover:bg-green-600 transition-colors dark:bg-green-700 dark:hover:bg-green-800"
+              >
+                <i class="fas fa-file-alt"></i>
+                <span *ngIf="screenWidth >= 1024">{{ selectedPortfolio === portfolio ? ('discounted_portfolios.hide_documents' | translate) : ('discounted_portfolios.view_documents' | translate) }}</span>
+              </button>
+
+              <button
+                (click)="exportPortfolioAsPDF(portfolio)"
+                class="flex items-center gap-2 p-2 bg-red-500 text-white rounded-full font-medium text-sm sm:text-base hover:bg-red-600 transition-colors dark:bg-red-700 dark:hover:bg-red-800"
+              >
+                <i class="fas fa-file-pdf"></i>
+                <span *ngIf="screenWidth >= 1024">{{ 'discounted_portfolios.export_pdf' | translate }}</span>
+              </button>
+
+            </div>
+
+          </div>
+
+          <div class="flow-root rounded-b-lg border-t-4 border-blue-400 py-3">
+            <dl class="-my-3 divide-y divide-gray-100 dark:divide-gray-700 text-sm" [ngClass]="{'hidden': collapsedStates[portfolio.portfolioId]}">
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.discount_date' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.discountDate | date:'dd-MM-yyyy, HH:mm:ss' }}</dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.number_of_documents' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.details.length }}</dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.bank_name' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.bankName }}</dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.interest_rate' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">
+                  {{ 'discounted_portfolios.interest_rate_word' | translate }} {{ portfolio.interestRateType }} {{ portfolio.interestRateTime }} de {{ portfolio.interestRate }}%
+                  <span *ngIf="portfolio.interestRateType === 'nominal'"> {{ 'discounted_portfolios.capitalization' | translate }} {{ portfolio.capitalizationFrequency }}</span>
+                </dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.total_nominal_value' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.portfolioCurrency === 'PEN' ? 'S/' : '$' }}{{ portfolio.totalNominalValue | number:'1.2-2' }}</dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.total_discount_value' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.portfolioCurrency === 'PEN' ? 'S/' : '$' }}{{ portfolio.totalDiscountValue | number:'1.2-2' }}</dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.total_net_value' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.portfolioCurrency === 'PEN' ? 'S/' : '$' }}{{ portfolio.totalNetValue | number:'1.2-2' }}</dd>
+              </div>
+              <div class="grid grid-cols-1 gap-4 p-4 even:bg-gray-50 sm:grid-cols-3 sm:gap-6 dark:even:bg-gray-700">
+                <dt class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.tcea' | translate }}</dt>
+                <dd class="text-gray-700 sm:col-span-2 dark:text-gray-300">{{ portfolio.portfolioTCEA * 100 | number:'1.5-5' }}%</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="w-full lg:w-1/3 lg:sticky lg:top-0 lg:right-0"
+        [ngClass]="{
+    'hidden': !selectedPortfolio,
+    'absolute inset-0 bg-white bg-opacity-90 z-50 dark:bg-gray-800 dark:bg-opacity-90': screenWidth < 1180
+  }"
+      >
+        <div *ngIf="selectedPortfolio" class="sticky top-0">
+          <h2 class="font-manrope font-semibold text-xl leading-6 text-black dark:text-white mb-4 text-center mt-5">
+            {{ selectedPortfolio.portfolioName }}
+          </h2>
+          <button
+            *ngIf="screenWidth < 1024"
+            (click)="closeDocuments()"
+            class="absolute top-4 right-4 p-1 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 active:bg-red-700 transition-all dark:bg-red-700 dark:hover:bg-red-800"
+          >
+            <i class="fas fa-times text-lg w-6 h-6"></i>
+          </button>
+
+          <!-- Contenedor de documentos con max-height dinámico -->
+          <div class="max-h-[calc(100vh-150px)] overflow-y-auto">
+            <div
+              *ngFor="let detail of selectedPortfolio.details; let i = index"
+              class="w-full px-3 min-[400px]:px-6 mb-4 bg-gray-50 rounded-lg shadow-md p-4 lg:p-10 md:p-8 sm:p-6 border-l-4 border-blue-400 document-container dark:bg-gray-700 dark:border-indigo-400"
+            >
+              <h5 class="text-lg font-bold text-blue-700 text-center mb-2 dark:text-blue-400">
+                {{ 'discounted_portfolios.document' | translate }} {{ i + 1 }}
+              </h5>
+              <p class="text-center text-gray-700 font-medium mb-4 dark:text-gray-300">{{ detail.documentId.concept }}</p>
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.document_type' | translate }}:</span>
+                  <span class="text-gray-700 capitalize dark:text-gray-300">{{ detail.documentId.type }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.discount_days' | translate }}:</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ detail.discountTime }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.discount_rate' | translate }}:</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ (detail.discountRate * 100) | number:'1.5-5' }}%</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.nominal_value' | translate }}:</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ selectedPortfolio.portfolioCurrency === 'PEN' ? 'S/' : '$' }} {{ detail.nominalValue | number:'1.2-2' }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.discounted_value' | translate }}:</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ selectedPortfolio.portfolioCurrency === 'PEN' ? 'S/' : '$' }}{{ detail.discountValue | number:'1.2-2' }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.net_value' | translate }}:</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ selectedPortfolio.portfolioCurrency === 'PEN' ? 'S/' : '$' }}{{ detail.netValue | number:'1.2-2' }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{ 'discounted_portfolios.tcea' | translate }}:</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ (detail.tcea * 100) | number:'1.5-5' }}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,69 @@
+<section class="relative h-[100vh] bg-[url(https://ml5enisp4q1t.i.optimole.com/cb:avo9~b5e4/w:auto/h:auto/q:mauto/ig:avif/f:best/https://interiorarchitects.com/wp-content/uploads/2021/01/Bank-of-America-Chicago_07.jpg)] bg-cover bg-center bg-no-repeat">
+
+  <div class="absolute inset-0 bg-white/50 sm:bg-gradient-to-r sm:from-white/50 sm:to-white/10 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"></div>
+
+  <!-- Logo e "Desco" en la esquina superior izquierda -->
+  <div class="absolute top-0 left-0 px-4 py-4 flex items-center in-the-center">
+    <img class="h-16 w-auto" src="../../../../assets/logo_desco.png" alt="Logo de Desco" height="513" width="550">
+    <span class="text-2xl font-extrabold text-gray-800 ml-3">Desco</span>
+  </div>
+
+  <div class="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
+
+    <!-- Columna izquierda (Texto y botones) -->
+    <div class="max-w-xl text-left hidden-680 reduce-text-box-width">
+      <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold text-gray-900">
+        Simplifica tus Finanzas
+        <strong class="block font-extrabold text-gray-700 md:text-xl lg:text-2xl">Descontando tus documentos.</strong>
+      </h1>
+
+      <p class="mt-4 max-w-lg text-gray-800 text-base md:text-lg lg:text-xl">
+        Compara y obtén las mejores tasas para tus facturas y letras. ¡Gestiona tus carteras sin complicaciones y maximiza tus ahorros hoy mismo!
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-4 text-center sm:text-left ">
+        <a class="block w-2/3 text-center rounded bg-gray-800 px-12 py-3 text-sm font-medium text-white shadow hover:bg-gray-700 focus:outline-none focus:ring active:bg-gray-600 cursor-pointer reduce-button-width">
+          <i class="fas fa-info-circle mr-2"></i> Conoce más de nosotros
+        </a>
+      </div>
+    </div>
+
+
+    <!-- Columna derecha (Formulario) -->
+    <div class="px-6 py-12 lg:px-8 mt-12 lg:mt-0 ml-auto bg-white rounded-xl shadow-lg animate-fadeInUp reduce-form-width reduce-form-width2">
+      <h2 class="text-center leading-9 tracking-tight text-gray-900 font-bold text-2xl">Inicia sesión en tu cuenta</h2>
+
+      <div class="mt-10 form-container">
+        <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <div class="relative">
+            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Correo electrónico</label>
+            <div class="mt-2 relative">
+              <input id="email" formControlName="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-10">
+              <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i> <!-- Icono de correo -->
+              <div *ngIf="submitted && signInForm.get('email')?.invalid" class="text-red-600 text-sm mt-1">
+                <div *ngIf="signInForm.get('email')?.errors?.['required']">El correo electrónico es obligatorio.</div>
+                <div *ngIf="signInForm.get('email')?.errors?.['email']">Correo electrónico no válido.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
+            </div>
+            <div class="mt-2 relative">
+              <input id="password" formControlName="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-10">
+              <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i> <!-- Icono de contraseña -->
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" class="flex w-full justify-center items-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-normal leading-6 text-white shadow-sm hover:bg-gray-700 active:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-customBlue">
+              <i class="fas fa-user mr-2"></i> Iniciar sesión
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,53 @@
+@media (max-width: 1024px) {
+  .reduce-form-width {
+    width: 50%;
+    margin: 40px auto 0;
+  }
+  .reduce-text-box-width {
+    width: 50%;
+    margin: 40px auto 0;
+    text-align: center;
+  }
+  .reduce-button-width {
+    width: 90%;
+    margin: 1px auto 0;
+  }
+}
+
+
+@media (max-width: 680px) {
+  .hidden-680 {
+    display: none;
+  }
+  .reduce-form-width {
+    width: 80%;
+    margin: 40px auto 0;
+  }
+  .in-the-center {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px; /* Ajusta este valor según sea necesario */
+    position: absolute;
+  }
+}
+
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.hidden {
+  display: none;
+}
+

@@ -1,0 +1,10 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.filter-container {
+  transition: all 0.3s ease-in-out;
+}

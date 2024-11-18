@@ -1,0 +1,98 @@
+<div class="bg-white dark:bg-gray-900">
+  <!-- Título de la vista -->
+  <div class="bg-white dark:bg-gray-900 flex justify-center px-4 sm:px-0 pt-10">
+    <h1 class="text-center text-balance text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+      {{ 'portfolio.title' | translate }}
+    </h1>
+  </div>
+  <!-- Botones Crear Cartera y Ver Carteras Descontadas -->
+  <div class="bg-white dark:bg-gray-900 flex justify-center px-4 sm:px-0 space-x-4">
+    <button type="button" (click)="openCreatePortfolioDialog()" class="mt-10 w-full sm:w-1/2 md:w-1/4 lg:w-1/6 xl:w-1/10 rounded-md border border-transparent bg-[#2B4570] px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-3 text-l font-medium text-white hover:bg-[#467599] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+      {{ 'portfolio.create_portfolio' | translate }}
+    </button>
+    <button type="button" (click)="viewDiscountedPortfolios()" class="mt-10 w-full sm:w-1/2 md:w-1/4 lg:w-1/6 xl:w-1/10 rounded-md border border-transparent bg-[#FCA311] px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-3 text-l font-medium text-white hover:bg-[#FFBA49] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-[#FF8A00] dark:hover:bg-[#FFB800]">
+      {{ 'portfolio.view_discounted_portfolios' | translate }}
+    </button>
+  </div>
+
+  <div class="mx-auto max-w-2xl px-4 pt-10 sm:px-6 sm:pb-24 lg:max-w-7xl lg:px-8">
+    <!-- Título "Tus carteras" -->
+    <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'portfolio.your_portfolios' | translate }}</h2>
+
+    <div class="block md:hidden mt-4 text-center">
+      <button (click)="toggleFilters()" class="bg-[#007FFF] text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-[#005D8C] dark:hover:bg-[#006C99]">
+        {{ showFilters ? ('portfolio.open_filters' | translate) : ('portfolio.close_filters' | translate) }}
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div [class.hidden]="showFilters && isSmallScreen" class="bg-white dark:bg-gray-900 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4 sm:p-0 mt-6">
+      <div class="w-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'portfolio.keyword' | translate }}</label>
+        <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" [(ngModel)]="filters.keyword" placeholder="{{ 'portfolio.keyword' | translate }}">
+      </div>
+      <div class="w-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'portfolio.total_value' | translate }}</label>
+        <div class="flex flex-col sm:flex-row sm:space-x-2">
+          <input type="number" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" [(ngModel)]="filters.minTotalValue" placeholder="min">
+          <input type="number" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" [(ngModel)]="filters.maxTotalValue" placeholder="max">
+        </div>
+      </div>
+      <div class="w-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'portfolio.number_of_documents' | translate }}</label>
+        <div class="flex flex-col sm:flex-row sm:space-x-2">
+          <input type="number" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" [(ngModel)]="filters.minDocuments" placeholder="min">
+          <input type="number" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" [(ngModel)]="filters.maxDocuments" placeholder="max">
+        </div>
+      </div>
+      <div class="flex items-center justify-center col-span-1 md:col-span-2 lg:col-span-3 mt-4">
+        <button type="button" (click)="applyFilters()" class="bg-[#007FFF] text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          <i class="fas fa-filter"></i>
+        </button>
+        <button type="button" (click)="clearFilters()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ml-2">
+          <i class="fas fa-eraser"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Fin de los filtros -->
+
+    <div class="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 justify-items-center bg-gradient-to-b from-blue-50 to-purple-100 dark:from-gray-800 dark:to-gray-900 p-4 rounded-xl shadow-inner">
+      <ng-container *ngFor="let portfolio of filteredPortfolios">
+        <a *ngIf="portfolio.state !== 'disable'" class="group relative block overflow-hidden rounded-lg bg-white shadow-lg p-2 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 cursor-default max-w-xs mx-auto dark:bg-gray-800">
+          <img
+            src="assets/logo_cartera.jpg"
+            alt="Logo de cartera"
+            class="h-46 w-46 object-cover transition-transform transform group-hover:scale-110"
+          />
+
+          <div class="relative bg-white p-2 rounded-lg mt-4 transition-all duration-300 dark:bg-gray-800">
+            <span class="whitespace-nowrap bg-yellow-400 px-3 py-1.5 text-xs font-medium text-black rounded-full dark:bg-yellow-500 dark:text-black">
+              {{ 'portfolio.currency_type' | translate }}: {{ formatCurrency(portfolio.currency) }}
+            </span>
+
+            <h3 class="mt-4 text-xl font-medium text-gray-800 group-hover:text-amber-500 transition-colors duration-300 dark:text-white dark:group-hover:text-amber-400">
+              {{ portfolio.name }}
+            </h3>
+
+            <p class="mt-2 text-base text-gray-700 dark:text-gray-300">
+              {{ 'portfolio.total_value_label' | translate }}: {{ portfolio.currency === 'PEN' ? 'S/' : '$' }}{{ formatNumber(portfolio.totalValue) }}
+            </p>
+
+            <p class="mt-2 text-base text-gray-700 dark:text-gray-300">
+              {{ 'portfolio.number_of_documents_label' | translate }}: {{ documentCounts[portfolio.id] || 0 }}
+            </p>
+
+            <form class="mt-4 flex justify-center">
+              <button
+                (click)="viewPortfolioDetail(portfolio.id)"
+                class="block rounded bg-amber-500 hover:bg-amber-600 text-white p-4 text-sm font-medium transition-all duration-300 hover:scale-105 dark:bg-amber-600 dark:hover:bg-amber-700"
+              >
+                {{ 'portfolio.view_documents' | translate }}
+              </button>
+            </form>
+          </div>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+</div>

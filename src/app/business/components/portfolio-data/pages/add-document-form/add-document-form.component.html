@@ -1,0 +1,104 @@
+<div class="bg-white dark:bg-gray-900 pt-5">
+  <form [formGroup]="documentForm" (ngSubmit)="onSubmit()" class="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-md shadow-md border-2 border-gray-300 dark:border-gray-700">
+    <div class="space-y-12">
+      <div class="border-b border-gray-900/10 dark:border-gray-600 pb-12">
+        <h2 class="text-xl font-semibold leading-7 text-gray-900 dark:text-white text-center">{{ 'add_document.title' | translate }}</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400 text-center">{{ 'add_document.subtitle' | translate }}</p>
+
+        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-6">
+            <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300 text-center">{{ 'add_document.document_type' | translate }}</label>
+            <div class="mt-2 flex space-x-4 justify-center">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" formControlName="type" value="factura" class="hidden peer">
+                <span class="px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 peer-checked:bg-[#2B4570] dark:peer-checked:bg-indigo-400 peer-checked:text-white dark:text-white transition-all duration-300">{{ 'add_document.invoice' | translate }}</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" formControlName="type" value="letra" class="hidden peer">
+                <span class="px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 peer-checked:bg-[#2B4570]  dark:peer-checked:bg-indigo-400  peer-checked:text-white dark:text-white transition-all duration-300">{{ 'add_document.bill' | translate }}</span>
+              </label>
+            </div>
+            <div *ngIf="documentForm.get('type')?.invalid && documentForm.get('type')?.touched" class="text-red-500 text-sm mt-1">{{ 'add_document.required_field' | translate }}</div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="issue-date" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.issue_date' | translate }}</label>
+            <div class="mt-2">
+              <input type="date" formControlName="issueDate" id="issue-date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-[#2B4570] sm:text-sm sm:leading-6">
+            </div>
+            <div *ngIf="documentForm.get('issueDate')?.invalid && documentForm.get('issueDate')?.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="documentForm.get('issueDate')?.errors?.['required']">{{ 'add_document.required_field' | translate }}</span>
+              <span *ngIf="documentForm.get('issueDate')?.errors?.['notFutureDate']">{{ 'add_document.future_date_error' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="due-date" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.due_date' | translate }}</label>
+            <div class="mt-2">
+              <input type="date" formControlName="dueDate" id="due-date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-[#2B4570] sm:text-sm sm:leading-6">
+            </div>
+            <div *ngIf="documentForm.get('dueDate')?.invalid && documentForm.get('dueDate')?.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="documentForm.get('dueDate')?.errors?.['required']">{{ 'add_document.required_field' | translate }}</span>
+              <span *ngIf="documentForm.get('dueDate')?.errors?.['notPastOrTodayDate']">{{ 'add_document.past_or_today_date_error' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="debtor-name" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.debtor_name' | translate }}</label>
+            <div class="mt-2">
+              <input type="text" formControlName="debtorName" id="debtor-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-[#2B4570] sm:text-sm sm:leading-6">
+            </div>
+            <div *ngIf="documentForm.get('debtorName')?.invalid && documentForm.get('debtorName')?.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="documentForm.get('debtorName')?.errors?.['required']">{{ 'add_document.required_field' | translate }}</span>
+              <span *ngIf="documentForm.get('debtorName')?.errors?.['alphabetic']">{{ 'add_document.alphabetic_error' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="debtor-dni" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.debtor_dni' | translate }}</label>
+            <div class="mt-2">
+              <input type="text" formControlName="debtorDni" id="debtor-dni" pattern="^\d{8}|\d{11}$" minlength="8" maxlength="11" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-[#2B4570] sm:text-sm sm:leading-6">
+            </div>
+            <div *ngIf="documentForm.get('debtorDni')?.invalid && documentForm.get('debtorDni')?.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="documentForm.get('debtorDni')?.errors?.['required']">{{ 'add_document.required_field' | translate }}</span>
+              <span *ngIf="documentForm.get('debtorDni')?.errors?.['pattern']">{{ 'add_document.dni_ruc_error' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="col-span-full">
+            <label for="concept" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.concept' | translate }}</label>
+            <div class="mt-2">
+              <input type="text" formControlName="concept" id="concept" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-[#2B4570] sm:text-sm sm:leading-6">
+            </div>
+            <div *ngIf="documentForm.get('concept')?.invalid && documentForm.get('concept')?.touched" class="text-red-500 text-sm mt-1">{{ 'add_document.required_field' | translate }}</div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="amount" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.amount' | translate }} {{ portfolioData.currency === 'PEN' ? 'S/' : '$' }}</label>
+            <div class="mt-2">
+              <input type="number" formControlName="amount" id="amount" class="block w-full input-reduced-width rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-[#2B4570] sm:text-sm sm:leading-6">
+            </div>
+            <div *ngIf="documentForm.get('amount')?.invalid && documentForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="documentForm.get('amount')?.errors?.['required']; else numericError">{{ 'add_document.required_field' | translate }}</span>
+
+              <!-- Sección para el error de valor numérico -->
+              <ng-template #numericError>
+                <span *ngIf="documentForm.get('amount')?.errors?.['numeric']; else positiveValueError">{{ 'add_document.numeric_positive_error' | translate }}</span>
+              </ng-template>
+
+              <!-- Sección para el error de valor positivo -->
+              <ng-template #positiveValueError>
+                <span *ngIf="documentForm.get('amount')?.errors?.['positiveValue']">{{ 'add_document.numeric_positive_error' | translate }}</span>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex items-center justify-end gap-x-6">
+      <button type="button" (click)="onCancel()" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300">{{ 'add_document.cancel_button' | translate }}</button>
+      <button type="submit" class="rounded-md bg-[#2B4570] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#243a5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4570]">{{ 'add_document.save_button' | translate }}</button>
+    </div>
+  </form>
+</div>
